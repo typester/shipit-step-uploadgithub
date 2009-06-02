@@ -38,7 +38,7 @@ sub init {
     die qq[Can't find git remote url for "$push_to"\n] unless $url;
     die qq[remote url "$url" is not github\n] unless $url =~ /github\.com/;
 
-    my ($repos) = $url =~ m!([^/]+/[^/]+)\.git$!;
+    my ($repos) = $url =~ m!([^/:]+/[^/]+)\.git$!;
     die qq[Can't detect github repos name] unless $repos;
 
     $self->{repos} = $repos;
@@ -58,8 +58,8 @@ sub run {
     return unless bool_prompt("Upload to GitHub?", "y");
 
     my $github = Net::GitHub::Upload->new(
-        username => $self->{user},
-        token    => $self->{token},
+        login => $self->{login},
+        token => $self->{token},
     );
     $github->upload(
         repos => $self->{repos},
